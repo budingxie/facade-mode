@@ -17,8 +17,17 @@ public class Jdk14Logger implements Log {
      */
     private Integer level;
 
-    public Jdk14Logger(Integer level) {
+    /**
+     * 名称
+     */
+    private String  name;
+
+    public Jdk14Logger() {
+    }
+
+    public Jdk14Logger(Integer level, String name) {
         this.level = level;
+        this.name = name;
     }
 
     protected void log(Integer level, String msg, Throwable ex) {
@@ -37,5 +46,21 @@ public class Jdk14Logger implements Log {
 
     public void error(Object msg) {
         log(level, String.valueOf(msg), null);
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

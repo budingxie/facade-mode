@@ -9,7 +9,7 @@ import com.py.facade.logging.LogFactory;
  */
 public class LogTest {
     public static void main(String[] args) {
-        Log log = LogFactory.getLog("jul");
+        Log log = LogFactory.getLog(LogTest.class.getName());
         log.debug("debug");
         log.info("info");
         log.error("error");

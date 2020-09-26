@@ -1,8 +1,6 @@
 package com.py.facade.logging;
 
-import com.py.facade.logging.impl.Jdk14Logger;
-import com.py.facade.logging.impl.Log4JLogger;
-
+import java.lang.reflect.Constructor;
 import java.util.Hashtable;
 
 /**
@@ -11,11 +9,11 @@ import java.util.Hashtable;
  */
 public abstract class LogFactory {
 
-    private static Hashtable<String, Log> hashtable = new Hashtable<String, Log>();
+    private static Hashtable<String, String> hashtable = new Hashtable<String, String>();
 
     static {
-        hashtable.put("jul", new Jdk14Logger(1));
-        hashtable.put("log4j", new Log4JLogger(1));
+        hashtable.put("jul", "com.py.facade.logging.impl.Jdk14Logger");
+        hashtable.put("log4j", "com.py.facade.logging.impl.Log4JLogger");
     }
 
 
@@ -24,7 +22,22 @@ public abstract class LogFactory {
     }
 
     public static Log getLog(String name) {
-        Log log = hashtable.get(name);
+        // 1.获取加载的日志对象
+        // 2.创建日志对象
+
+        Log log = null;
+        for (String value : hashtable.values()) {
+            try {
+                Class<?> logClazz = Class.forName(value);
+                Constructor<?> constructor = logClazz.getConstructor(Integer.class, String.class);
+                log = (Log) constructor.newInstance(1, name);
+            } catch (Exception e) {
+                // 没有对应的日志
+            }
+        }
+        if (log == null) {
+            throw new RuntimeException();
+        }
         return log;
     }
 
